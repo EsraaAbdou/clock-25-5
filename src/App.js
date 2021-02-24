@@ -13,13 +13,39 @@ function TimeInput(props){
     </div>
   );
 }
+function Timer(props){
+  return(
+    <div>
+      <h4 id="timer-label">Session</h4>
+      <h3 id="time-left">{props.min.toString().length===2?"":"0"}{props.min}:{props.sec.toString().length===2?"":"0"}{props.sec}</h3>
+      <span id="start_stop" onClick={props.toggleTimer}>start/stop</span>
+      <span id="reset" onClick={props.resetTimer}>reset</span>
+    </div>
+  );
+}
 class App extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       breakLength: 5,
       sessionLength: 25,
+      minLeft: 0,
+      secLeft: 10,
     };
+    this.resetTimer = this.resetTimer.bind(this);
+    this.toggleTimer = this.toggleTimer.bind(this);
+  }
+
+  resetTimer() {
+    this.setState({
+      breakLength: 5,
+      sessionLength: 25,
+      minLeft: 25,
+      secLeft: 0,
+    });
+  }
+  toggleTimer() {
+    console.log("toggle timer function")
   }
   render() {
     return(
@@ -34,6 +60,8 @@ class App extends React.Component{
             <TimeInput label="Session Length" labelID="session-label" time={this.state.sessionLength}
               incID="session-increment" decID="session-decrement" timeID="session-length"/>
           </div>
+          <Timer min={this.state.minLeft} sec={this.state.secLeft}
+            resetTimer={this.resetTimer} toggleTimer={this.toggleTimer} />
         </div>
       </div>
     );
