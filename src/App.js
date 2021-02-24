@@ -46,15 +46,17 @@ class App extends React.Component{
       sessionLength: 25,
       minLeft: 25,
       secLeft: 0,
-      timerStatus: false
+      timerStatus: false,
+      turn: true
     });
+    clearInterval(this.state.timer);
   }
 
   toggleTimer() {
     if(!this.state.timerStatus) {
       // turn on timer
       let timerInterval = setInterval(() => {
-        console.log(this.state.timerStatus)
+        // console.log(this.state.timerStatus)
         if(this.state.secLeft>0){
           this.setState(state => {return{secLeft: state.secLeft-1}})
         }else if(this.state.minLeft>0){
