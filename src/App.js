@@ -31,6 +31,7 @@ class App extends React.Component{
       sessionLength: 25,
       minLeft: 0,
       secLeft: 10,
+      timerStatus: false
     };
     this.resetTimer = this.resetTimer.bind(this);
     this.toggleTimer = this.toggleTimer.bind(this);
@@ -42,11 +43,32 @@ class App extends React.Component{
       sessionLength: 25,
       minLeft: 25,
       secLeft: 0,
+      timerStatus: false
     });
   }
   toggleTimer() {
-    console.log("toggle timer function")
+    if(!this.state.timerStatus) {
+      // turn on timer
+      let timerInterval = setInterval(() => {
+        console.log(this.state.timerStatus)
+        if(this.state.secLeft>0){
+          this.setState(state => {return{secLeft: state.secLeft-1}})
+        }else if(this.state.minLeft>0){
+          this.setState(state => {return {minLeft: state.minLeft-1, secLeft: 59}})
+        } else {
+          // If the count down is finished
+          clearInterval(this.state.timer)
+          this.setState({timerStatus: false});
+        }
+      }, 1000);
+      this.setState({timer: timerInterval});
+    } else {
+      // turn off timer
+      clearInterval(this.state.timer);
+    }
+    this.setState(state => {return{ timerStatus: !state.timerStatus}})
   }
+  
   render() {
     return(
       <div className="container text-center">
@@ -60,7 +82,7 @@ class App extends React.Component{
             <TimeInput label="Session Length" labelID="session-label" time={this.state.sessionLength}
               incID="session-increment" decID="session-decrement" timeID="session-length"/>
           </div>
-          <Timer min={this.state.minLeft} sec={this.state.secLeft}
+          <Timer min={this.state.minLeft} sec={this.state.secLeft} timerStatus={this.state.timerStatus}
             resetTimer={this.resetTimer} toggleTimer={this.toggleTimer} />
         </div>
       </div>
