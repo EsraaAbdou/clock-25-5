@@ -50,6 +50,8 @@ class App extends React.Component{
       turn: true
     });
     clearInterval(this.state.timer);
+    document.querySelector("audio").pause();
+    document.querySelector("audio").currentTime = 0;
   }
 
   toggleTimer() {
@@ -57,6 +59,7 @@ class App extends React.Component{
       // turn on timer
       let timerInterval = setInterval(() => {
         // console.log(this.state.timerStatus)
+        if(this.state.minLeft === 0 && this.state.secLeft === 1) document.querySelector("audio").play();
         if(this.state.secLeft>0){
           this.setState(state => {return{secLeft: state.secLeft-1}})
         }else if(this.state.minLeft>0){
@@ -127,6 +130,9 @@ class App extends React.Component{
   render() {
     return(
       <div className="container text-center">
+        <audio id="beep">
+          <source src="assets/beeps.mp3" type="audio/mpeg" />
+        </audio>
         <h1>25 + 5 Clock</h1>
         <div className="row">
           <div className="col-12 col-md-5">
