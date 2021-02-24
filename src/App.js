@@ -6,9 +6,9 @@ function TimeInput(props){
     <div>
       <h4 id={props.labelID}>{props.label}</h4>
       <div>
-        <button id={props.decID}>-</button>
+        <button id={props.decID} onClick={props.decrementTime}>-</button>
         <label id={props.timeID}>{props.time}</label>
-        <button id={props.incID}>+</button>
+        <button id={props.incID} onClick={props.incrementTime}>+</button>
       </div>
     </div>
   );
@@ -36,6 +36,8 @@ class App extends React.Component{
     };
     this.resetTimer = this.resetTimer.bind(this);
     this.toggleTimer = this.toggleTimer.bind(this);
+    this.decrementTime = this.decrementTime.bind(this);
+    this.incrementTime = this.incrementTime.bind(this);
   }
 
   resetTimer() {
@@ -74,18 +76,64 @@ class App extends React.Component{
     this.setState(state => {return{ timerStatus: !state.timerStatus}})
   }
 
+  decrementTime(event) {
+    if(!this.state.timerStatus){
+      if(event.target.id ==="break-decrement") {
+        if(this.state.breakLength>1) {
+          if(!this.state.turn) {
+            this.setState(state => { return{breakLength: state.breakLength - 1, minLeft: state.breakLength - 1, secLeft: 0}});
+          } else {
+            this.setState(state => { return{breakLength: state.breakLength - 1}});
+          }
+        }
+      }
+      if(event.target.id ==="session-decrement"){
+        if(this.state.sessionLength>1) {
+          if(this.state.turn) {
+            this.setState(state => { return{sessionLength: state.sessionLength - 1, minLeft: state.sessionLength - 1, secLeft: 0}});
+          } else {
+            this.setState(state => { return{sessionLength: state.sessionLength - 1}});
+          }
+        }   
+      }
+    }
+  }
+
+  incrementTime(event) {
+    if(!this.state.timerStatus){
+      if(event.target.id ==="break-increment") {
+        if(this.state.breakLength < 60) {
+          if(!this.state.turn) {
+            this.setState(state => { return{breakLength: state.breakLength + 1, minLeft: state.breakLength + 1, secLeft: 0}});
+          } else {
+            this.setState(state => { return{breakLength: state.breakLength + 1}});
+          }
+        }      
+      }
+      if(event.target.id ==="session-increment"){
+        if(this.state.sessionLength<60) {
+          if(this.state.turn) {
+            this.setState(state => { return{sessionLength: state.sessionLength + 1, minLeft: state.sessionLength + 1, secLeft: 0}});
+          } else {
+            this.setState(state => { return{sessionLength: state.sessionLength + 1}});
+          }
+        }  
+      }
+    }
+  }
+
   render() {
     return(
       <div className="container text-center">
         <h1>25 + 5 Clock</h1>
         <div className="row">
           <div className="col-12 col-md-5">
-            <TimeInput label="Break Length" labelID="break-label" time={this.state.breakLength}
-              incID="break-increment" decID="break-decrement" timeID="break-length"/>  
+            <TimeInput label="Break Length" labelID="break-label" time={this.state.breakLength} incID="break-increment" decID="break-decrement" timeID="break-length"
+              decrementTime={this.decrementTime} incrementTime={this.incrementTime} />  
           </div>
           <div className="col-12 col-md-5">
-            <TimeInput label="Session Length" labelID="session-label" time={this.state.sessionLength}
-              incID="session-increment" decID="session-decrement" timeID="session-length"/>
+            <TimeInput label="Session Length" labelID="session-label" time={this.state.sessionLength} incID="session-increment" decID="session-decrement"
+              timeID="session-length" decrementTime={this.decrementTime} incrementTime={this.incrementTime} />
           </div>
           <Timer min={this.state.minLeft} sec={this.state.secLeft} timerStatus={this.state.timerStatus} turn={this.state.turn?"Session":"Break"}
             resetTimer={this.resetTimer} toggleTimer={this.toggleTimer} />
