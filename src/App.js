@@ -1,14 +1,18 @@
 import React from 'react';
 import './App.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 function TimeInput(props){
   return (
     <div>
-      <h4 id={props.labelID}>{props.label}</h4>
+      <h4 id={props.labelID} className="mb-4 font-weight-bold">{props.label}</h4>
       <div>
-        <button id={props.decID} onClick={props.decrementTime}>-</button>
-        <label id={props.timeID}>{props.time}</label>
-        <button id={props.incID} onClick={props.incrementTime}>+</button>
+        <span id={props.decID} onClick={()=>props.decrementTime(props.decID)}>
+          <FontAwesomeIcon icon={faMinus} size="2x"/>
+        </span>
+        <label id={props.timeID} className="px-5 font-weight-bold" unselectable="on">{props.time}</label>
+        <FontAwesomeIcon icon={faPlus} id={props.incID} onClick={()=>props.incrementTime(props.incID)} size="2x" />
       </div>
     </div>
   );
@@ -16,10 +20,14 @@ function TimeInput(props){
 function Timer(props){
   return(
     <div>
-      <h4 id="timer-label">{props.turn}</h4>
-      <h3 id="time-left">{props.min.toString().length===2?"":"0"}{props.min}:{props.sec.toString().length===2?"":"0"}{props.sec}</h3>
-      <span id="start_stop" onClick={props.toggleTimer}>start/stop</span>
-      <span id="reset" onClick={props.resetTimer}>reset</span>
+      <div className="border border-white rounded d-inline-block w-25 p-5 thicker-border">
+        <h4 id="timer-label" className="py-3">{props.turn}</h4>
+        <h3 id="time-left">{props.min.toString().length===2?"":"0"}{props.min}:{props.sec.toString().length===2?"":"0"}{props.sec}</h3>
+      </div>
+      <div className="p-4">
+        <span id="start_stop" className="mr-2" onClick={props.toggleTimer}>start/stop</span>
+        <span id="reset" className="ml-2" onClick={props.resetTimer}>reset</span>
+      </div>
     </div>
   );
 }
@@ -27,10 +35,10 @@ class App extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      breakLength: 1,
-      sessionLength: 1,
-      minLeft: 0,
-      secLeft: 2,
+      breakLength: 5,
+      sessionLength: 25,
+      minLeft: 25,
+      secLeft: 0,
       timerStatus: false, 
       turn: true
     };
@@ -81,9 +89,9 @@ class App extends React.Component{
     this.setState(state => {return{ timerStatus: !state.timerStatus}})
   }
 
-  decrementTime(event) {
+  decrementTime(params) {
     if(!this.state.timerStatus){
-      if(event.target.id ==="break-decrement") {
+      if(params === "break-decrement") {
         if(this.state.breakLength>1) {
           if(!this.state.turn) {
             this.setState(state => { return{breakLength: state.breakLength - 1, minLeft: state.breakLength - 1, secLeft: 0}});
@@ -92,7 +100,7 @@ class App extends React.Component{
           }
         }
       }
-      if(event.target.id ==="session-decrement"){
+      if(params === "session-decrement"){
         if(this.state.sessionLength>1) {
           if(this.state.turn) {
             this.setState(state => { return{sessionLength: state.sessionLength - 1, minLeft: state.sessionLength - 1, secLeft: 0}});
@@ -104,9 +112,9 @@ class App extends React.Component{
     }
   }
 
-  incrementTime(event) {
+  incrementTime(params) {
     if(!this.state.timerStatus){
-      if(event.target.id ==="break-increment") {
+      if(params === "break-increment") {
         if(this.state.breakLength < 60) {
           if(!this.state.turn) {
             this.setState(state => { return{breakLength: state.breakLength + 1, minLeft: state.breakLength + 1, secLeft: 0}});
@@ -115,7 +123,7 @@ class App extends React.Component{
           }
         }      
       }
-      if(event.target.id ==="session-increment"){
+      if(params === "session-increment"){
         if(this.state.sessionLength<60) {
           if(this.state.turn) {
             this.setState(state => { return{sessionLength: state.sessionLength + 1, minLeft: state.sessionLength + 1, secLeft: 0}});
@@ -129,22 +137,24 @@ class App extends React.Component{
 
   render() {
     return(
-      <div className="container text-center">
+      <div className="container text-center text-white">
         <audio id="beep">
-          <source src="assets/beeps.mp3" type="audio/mpeg" />
+          <source src="./assets/beeps.mp3" type="audio/mpeg" />
         </audio>
-        <h1>25 + 5 Clock</h1>
+        <h1 className="p-5">25 + 5 Clock</h1>
         <div className="row">
-          <div className="col-12 col-md-5">
+          <div className="col-12 col-md-6 p-4">
             <TimeInput label="Break Length" labelID="break-label" time={this.state.breakLength} incID="break-increment" decID="break-decrement" timeID="break-length"
               decrementTime={this.decrementTime} incrementTime={this.incrementTime} />  
           </div>
-          <div className="col-12 col-md-5">
+          <div className="col-12 col-md-6 p-4">
             <TimeInput label="Session Length" labelID="session-label" time={this.state.sessionLength} incID="session-increment" decID="session-decrement"
               timeID="session-length" decrementTime={this.decrementTime} incrementTime={this.incrementTime} />
           </div>
-          <Timer min={this.state.minLeft} sec={this.state.secLeft} timerStatus={this.state.timerStatus} turn={this.state.turn?"Session":"Break"}
-            resetTimer={this.resetTimer} toggleTimer={this.toggleTimer} />
+          <div className="col-12 p-5">
+            <Timer min={this.state.minLeft} sec={this.state.secLeft} timerStatus={this.state.timerStatus} turn={this.state.turn?"Session":"Break"}
+              resetTimer={this.resetTimer} toggleTimer={this.toggleTimer} />
+          </div>
         </div>
       </div>
     );
