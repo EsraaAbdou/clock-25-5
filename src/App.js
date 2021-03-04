@@ -20,7 +20,7 @@ function TimeInput(props){
 function Timer(props){
   return(
     <div>
-      <div className="border border-white rounded d-inline-block w-25 p-5 thicker-border">
+      <div className="border border-white rounded d-inline-block w-100 w-responsive p-5 thicker-border">
         <h4 id="timer-label" className="py-3">{props.turn}</h4>
         <h3 id="time-left">{props.min.toString().length===2?"":"0"}{props.min}:{props.sec.toString().length===2?"":"0"}{props.sec}</h3>
       </div>

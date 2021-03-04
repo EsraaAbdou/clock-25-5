@@ -7,3 +7,21 @@
 #break-length, #session-length{
   font-size: 2em;
 }
+
+@media (min-width: 360px) {
+  .w-responsive{
+    width: 75%!important;
+  }
+}
+
+@media (min-width: 768px) { 
+  .w-responsive{
+    width: 50%!important;
+  }
+}
+
+@media (min-width: 992px) {
+  .w-responsive{
+    width: 25%!important;
+  }
+}
