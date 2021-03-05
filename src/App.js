@@ -1,36 +1,8 @@
 import React from 'react';
 import './App.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import TimeInput from './components/timeInputComponent';
+import Timer from './components/timerComponent';
 
-function TimeInput(props){
-  return (
-    <div>
-      <h4 id={props.labelID} className="mb-4 font-weight-bold">{props.label}</h4>
-      <div>
-        <span id={props.decID} onClick={()=>props.decrementTime(props.decID)}>
-          <FontAwesomeIcon icon={faMinus} size="2x"/>
-        </span>
-        <label id={props.timeID} className="px-5 font-weight-bold" unselectable="on">{props.time}</label>
-        <FontAwesomeIcon icon={faPlus} id={props.incID} onClick={()=>props.incrementTime(props.incID)} size="2x" />
-      </div>
-    </div>
-  );
-}
-function Timer(props){
-  return(
-    <div>
-      <div className="border border-white rounded d-inline-block w-100 w-responsive p-5 thicker-border">
-        <h4 id="timer-label" className="py-3">{props.turn}</h4>
-        <h3 id="time-left">{props.min.toString().length===2?"":"0"}{props.min}:{props.sec.toString().length===2?"":"0"}{props.sec}</h3>
-      </div>
-      <div className="p-4">
-        <span id="start_stop" className="mr-2" onClick={props.toggleTimer}>start/stop</span>
-        <span id="reset" className="ml-2" onClick={props.resetTimer}>reset</span>
-      </div>
-    </div>
-  );
-}
 class App extends React.Component{
   constructor(props){
     super(props);
@@ -89,9 +61,9 @@ class App extends React.Component{
     this.setState(state => {return{ timerStatus: !state.timerStatus}})
   }
 
-  decrementTime(params) {
+  decrementTime(event) {
     if(!this.state.timerStatus){
-      if(params === "break-decrement") {
+      if(event.target.id ==="break-decrement") {
         if(this.state.breakLength>1) {
           if(!this.state.turn) {
             this.setState(state => { return{breakLength: state.breakLength - 1, minLeft: state.breakLength - 1, secLeft: 0}});
@@ -100,7 +72,7 @@ class App extends React.Component{
           }
         }
       }
-      if(params === "session-decrement"){
+      if(event.target.id ==="session-decrement"){
         if(this.state.sessionLength>1) {
           if(this.state.turn) {
             this.setState(state => { return{sessionLength: state.sessionLength - 1, minLeft: state.sessionLength - 1, secLeft: 0}});
@@ -112,9 +84,9 @@ class App extends React.Component{
     }
   }
 
-  incrementTime(params) {
+  incrementTime(event) {
     if(!this.state.timerStatus){
-      if(params === "break-increment") {
+      if(event.target.id ==="break-increment") {
         if(this.state.breakLength < 60) {
           if(!this.state.turn) {
             this.setState(state => { return{breakLength: state.breakLength + 1, minLeft: state.breakLength + 1, secLeft: 0}});
@@ -123,7 +95,7 @@ class App extends React.Component{
           }
         }      
       }
-      if(params === "session-increment"){
+      if(event.target.id ==="session-increment"){
         if(this.state.sessionLength<60) {
           if(this.state.turn) {
             this.setState(state => { return{sessionLength: state.sessionLength + 1, minLeft: state.sessionLength + 1, secLeft: 0}});
@@ -139,7 +111,7 @@ class App extends React.Component{
     return(
       <div className="container text-center text-white">
         <audio id="beep">
-          <source src="./assets/beeps.mp3" type="audio/mpeg" />
+          <source src="https://drive.google.com/uc?export=download&id=1KGApU1h50_T-LBs10vUu_10B3BwfgH9s" type="audio/mpeg" />
         </audio>
         <h1 className="p-5">25 + 5 Clock</h1>
         <div className="row">
@@ -160,4 +132,5 @@ class App extends React.Component{
     );
   }
 }
+
 export default App;
